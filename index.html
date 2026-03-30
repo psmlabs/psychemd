@@ -3,28 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PSM Labs — PSYCHE Persona Specification</title>
+<title>PSM Labs — Exploring Personas, Safety & Intelligence</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    --bg: #08091a;
-    --bg-surface: #0d0f24;
-    --bg-card: #111333;
-    --border: #1a1d45;
-    --border-glow: #7c3aed44;
-    --text: #e2dff0;
-    --text-dim: #8a86a8;
-    --text-muted: #5a5678;
-    --purple: #a78bfa;
-    --purple-bright: #c4b5fd;
-    --purple-deep: #7c3aed;
-    --neon-cyan: #00f0ff;
-    --neon-green: #39ff14;
-    --neon-pink: #ff2d8a;
-    --neon-yellow: #f0d000;
+    --bg: #ffffff;
+    --bg-off: #f7f7f7;
+    --surface: #ffffff;
+    --border: #e0e0e0;
+    --border-strong: #000;
+    --text: #000000;
+    --text-dim: #777;
+    --text-mid: #555;
+    --accent: #7c3aed;
+    --green: #10b981;
+    --pink: #ec4899;
+    --yellow: #f59e0b;
+    --red: #ef4444;
+    --blue: #3b82f6;
   }
 
   body {
@@ -35,42 +34,32 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ── Background grid ── */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background:
-      repeating-linear-gradient(0deg, transparent, transparent 59px, #1a1d4515 60px),
-      repeating-linear-gradient(90deg, transparent, transparent 59px, #1a1d4515 60px);
-    pointer-events: none;
-    z-index: 0;
+  /* ── Ticker (black bar) ── */
+  .ticker-wrap {
+    width: 100%;
+    overflow: hidden;
+    background: #000;
+    padding: 10px 0;
   }
-
-  /* ── Scanlines ── */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px);
-    pointer-events: none;
-    z-index: 999;
+  .ticker {
+    display: flex;
+    animation: scroll 30s linear infinite;
+    width: max-content;
   }
-
-  /* ── Side labels ── */
-  .side-label {
-    position: fixed;
+  .ticker span {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 3px;
-    color: var(--text-muted);
-    writing-mode: vertical-rl;
-    z-index: 50;
-    text-transform: uppercase;
-    opacity: 0.5;
+    font-size: 12px;
+    color: #666;
+    white-space: nowrap;
+    padding: 0 24px;
+    letter-spacing: 0.5px;
   }
-  .side-label.left { left: 20px; top: 50%; transform: translateY(-50%) rotate(180deg); }
-  .side-label.right { right: 20px; top: 50%; transform: translateY(-50%); }
+  .ticker span b { color: #ccc; font-weight: 500; }
+  .ticker .hl { color: #34d399; }
+  @keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
 
   /* ── Nav ── */
   .nav {
@@ -78,8 +67,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 16px 48px;
-    background: rgba(8,9,26,0.85);
-    backdrop-filter: blur(20px);
+    background: var(--bg);
     border-bottom: 1px solid var(--border);
     position: sticky;
     top: 0;
@@ -92,7 +80,7 @@
     color: var(--text);
     text-decoration: none;
   }
-  .nav-logo .accent { color: var(--neon-cyan); text-shadow: 0 0 12px var(--neon-cyan); }
+  .nav-logo .accent { color: var(--accent); }
   .nav-links { display: flex; gap: 28px; align-items: center; }
   .nav-links a {
     color: var(--text-dim);
@@ -100,14 +88,14 @@
     font-size: 13px;
     font-weight: 500;
     font-family: 'JetBrains Mono', monospace;
-    transition: color 0.2s, text-shadow 0.2s;
+    transition: color 0.2s;
   }
-  .nav-links a:hover { color: var(--neon-cyan); text-shadow: 0 0 8px var(--neon-cyan); }
+  .nav-links a:hover { color: var(--text); }
   .nav-cta {
     padding: 8px 20px;
     background: transparent;
-    color: var(--purple-bright);
-    border: 1.5px solid var(--purple-deep);
+    color: var(--text);
+    border: 1.5px solid var(--text);
     border-radius: 0;
     font-size: 12px;
     font-weight: 700;
@@ -115,41 +103,7 @@
     font-family: 'JetBrains Mono', monospace;
     transition: all 0.2s;
   }
-  .nav-cta:hover {
-    background: var(--purple-deep);
-    color: #fff;
-    box-shadow: 0 0 20px rgba(124,58,237,0.4);
-  }
-
-  /* ── Status strip ── */
-  .status-strip {
-    display: flex;
-    justify-content: center;
-    gap: 32px;
-    padding: 12px 48px;
-    background: var(--bg-surface);
-    border-bottom: 1px solid var(--border);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--text-muted);
-  }
-  .status-pip {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .pip {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--neon-green);
-    box-shadow: 0 0 8px var(--neon-green);
-    animation: pulse-pip 2s ease infinite;
-  }
-  .pip.cyan { background: var(--neon-cyan); box-shadow: 0 0 8px var(--neon-cyan); }
-  .pip.purple { background: var(--purple); box-shadow: 0 0 8px var(--purple); }
-  .pip.pink { background: var(--neon-pink); box-shadow: 0 0 8px var(--neon-pink); }
-  @keyframes pulse-pip { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .nav-cta:hover { background: var(--text); color: var(--bg); }
 
   /* ── Hero ── */
   .hero {
@@ -159,68 +113,36 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 100px 24px 80px;
+    padding: 100px 24px 60px;
+    background: var(--bg);
     position: relative;
     z-index: 5;
-  }
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(124,58,237,0.15) 0%, rgba(0,240,255,0.05) 40%, transparent 70%);
-    pointer-events: none;
-    filter: blur(60px);
   }
   .hero-tagline {
     font-size: 11px;
     font-family: 'JetBrains Mono', monospace;
-    color: var(--neon-cyan);
-    letter-spacing: 4px;
+    color: var(--text-dim);
+    letter-spacing: 3px;
     text-transform: uppercase;
     margin-bottom: 32px;
-    text-shadow: 0 0 15px rgba(0,240,255,0.5);
   }
-  /* Horizontal lines behind title */
-  .hero-title-wrap {
-    position: relative;
-  }
-  .hero-title-wrap::before,
-  .hero-title-wrap::after {
-    content: '';
-    position: absolute;
-    left: -200px;
-    right: -200px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border), transparent);
-  }
-  .hero-title-wrap::before { top: 30%; }
-  .hero-title-wrap::after { bottom: 30%; }
   .hero-title {
-    font-size: clamp(80px, 14vw, 200px);
+    font-size: clamp(80px, 14vw, 180px);
     font-weight: 900;
     letter-spacing: -6px;
     line-height: 0.85;
     margin-bottom: 36px;
     color: var(--text);
-    position: relative;
-    z-index: 2;
   }
-  .hero-title .dot {
-    color: var(--neon-cyan);
-    text-shadow: 0 0 30px var(--neon-cyan), 0 0 60px rgba(0,240,255,0.3);
-  }
+  .hero-title .dot { color: #10b981; }
   .hero-sub {
     font-size: 17px;
-    color: var(--text-dim);
+    color: var(--text-mid);
     max-width: 560px;
     line-height: 1.7;
     margin-bottom: 48px;
   }
-  .hero-buttons { display: flex; gap: 12px; margin-bottom: 80px; position: relative; }
+  .hero-buttons { display: flex; gap: 12px; margin-bottom: 80px; }
   .btn {
     padding: 16px 40px;
     border-radius: 0;
@@ -229,143 +151,26 @@
     cursor: pointer;
     text-decoration: none;
     font-family: 'Inter', sans-serif;
-    transition: all 0.25s;
+    transition: all 0.2s;
     letter-spacing: -0.2px;
   }
-  .btn-glow {
-    background: var(--purple-deep);
-    color: #fff;
-    border: 1.5px solid var(--purple);
-    box-shadow: 0 0 20px rgba(124,58,237,0.3);
+  .btn-black {
+    background: var(--text);
+    color: var(--bg);
+    border: 1.5px solid var(--text);
   }
-  .btn-glow:hover {
-    box-shadow: 0 0 40px rgba(124,58,237,0.6), 0 0 80px rgba(124,58,237,0.2);
-    transform: translateY(-2px);
-  }
+  .btn-black:hover { background: #222; }
   .btn-outline {
     background: transparent;
     color: var(--text);
-    border: 1.5px solid var(--border);
+    border: 1.5px solid #ccc;
   }
-  .btn-outline:hover {
-    border-color: var(--neon-cyan);
-    color: var(--neon-cyan);
-    box-shadow: 0 0 20px rgba(0,240,255,0.15);
-    transform: translateY(-2px);
-  }
+  .btn-outline:hover { border-color: var(--text); }
 
-  /* ── Video Monitor ── */
-  .video-section {
-    padding: 0 48px 100px;
-    display: flex;
-    justify-content: center;
-    position: relative;
-    z-index: 5;
-  }
-  .monitor-frame {
-    max-width: 900px;
-    width: 100%;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    overflow: hidden;
-    box-shadow: 0 0 60px rgba(124,58,237,0.1), 0 20px 60px rgba(0,0,0,0.5);
-  }
-  .monitor-bar {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 16px;
-    background: var(--bg-surface);
-    border-bottom: 1px solid var(--border);
-  }
-  .monitor-dot { width: 10px; height: 10px; border-radius: 50%; background: #1a1d45; }
-  .monitor-dot:first-child { background: var(--neon-pink); box-shadow: 0 0 6px var(--neon-pink); }
-  .monitor-dot:nth-child(2) { background: var(--neon-yellow); box-shadow: 0 0 6px var(--neon-yellow); }
-  .monitor-dot:nth-child(3) { background: var(--neon-green); box-shadow: 0 0 6px var(--neon-green); }
-  .monitor-label {
-    margin-left: auto;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: var(--text-muted);
-  }
-  .monitor-frame video {
-    width: 100%;
-    display: block;
-  }
-
-  /* ── Timeline wrapper ── */
-  .timeline-wrap {
-    position: relative;
-    padding-left: 80px;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-  .timeline-line {
-    position: absolute;
-    left: 40px;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: linear-gradient(180deg, var(--purple-deep), var(--neon-cyan), var(--purple-deep), transparent);
-    opacity: 0.4;
-  }
-  .timeline-node {
-    position: absolute;
-    left: 33px;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: var(--bg);
-    border: 2px solid var(--purple);
-    box-shadow: 0 0 12px var(--purple);
-    z-index: 10;
-  }
-  .timeline-node.cyan { border-color: var(--neon-cyan); box-shadow: 0 0 12px var(--neon-cyan); }
-  .timeline-node.pink { border-color: var(--neon-pink); box-shadow: 0 0 12px var(--neon-pink); }
-  .timeline-node.green { border-color: var(--neon-green); box-shadow: 0 0 12px var(--neon-green); }
-
-  /* ── Sections ── */
-  .tl-section {
-    padding: 80px 0;
-    position: relative;
-    z-index: 5;
-  }
-  .section-tag {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--neon-cyan);
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    text-shadow: 0 0 10px rgba(0,240,255,0.3);
-  }
-  .section-tag.purple { color: var(--purple); text-shadow: 0 0 10px rgba(167,139,250,0.3); }
-  .section-tag.pink { color: var(--neon-pink); text-shadow: 0 0 10px rgba(255,45,138,0.3); }
-  .section-tag.green { color: var(--neon-green); text-shadow: 0 0 10px rgba(57,255,20,0.3); }
-
-  .section-title {
-    font-size: clamp(32px, 4vw, 52px);
-    font-weight: 800;
-    letter-spacing: -2px;
-    line-height: 1.1;
-    margin-bottom: 16px;
-    color: var(--text);
-  }
-  .section-title .glow {
-    color: var(--purple-bright);
-    text-shadow: 0 0 20px rgba(167,139,250,0.4);
-  }
-  .section-desc {
-    color: var(--text-dim);
-    font-size: 16px;
-    line-height: 1.7;
-    max-width: 580px;
-  }
-
-  /* ── Compat logos ── */
+  /* ── Logos (black bar) ── */
   .logos-section {
-    padding: 48px 0;
+    background: #000;
+    padding: 40px 48px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -376,76 +181,93 @@
   .logos-label {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
-    color: var(--text-muted);
+    color: #555;
     letter-spacing: 2px;
     text-transform: uppercase;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
   }
   .logos-row {
     display: flex;
     align-items: center;
-    gap: 28px;
+    gap: 36px;
     flex-wrap: wrap;
     justify-content: center;
   }
   .logos-row span {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
-    color: var(--text-muted);
+    color: #888;
     letter-spacing: 0.5px;
-    transition: color 0.3s, text-shadow 0.3s;
   }
-  .logos-row span:hover { color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); }
-  .logos-divider { width: 1px; height: 40px; background: var(--border); }
+  .logos-divider {
+    width: 1px;
+    height: 48px;
+    background: #333;
+  }
 
-  /* ── Terminal cards ── */
-  .cards-grid {
+  /* ── Terminal Cards (black section) ── */
+  .cards-wrap {
+    background: #000;
+    padding: 0 48px 60px;
+  }
+  .cards-section {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
-    margin-top: 40px;
+    max-width: 1100px;
+    margin: 0 auto;
   }
   .term-card {
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
+    background: #0a0a0a;
+    border: 1px solid #1a1a1a;
     border-radius: 2px;
     overflow: hidden;
-    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
-  }
-  .term-card:hover {
-    border-color: var(--purple);
-    transform: translateY(-4px);
-    box-shadow: 0 8px 30px rgba(124,58,237,0.15);
   }
   .term-header {
     display: flex;
     align-items: center;
     gap: 5px;
     padding: 10px 14px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid #1a1a1a;
   }
-  .td { width: 9px; height: 9px; border-radius: 50%; background: #1a1d45; }
-  .term-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-muted); margin-left: auto; }
+  .td { width: 9px; height: 9px; border-radius: 50%; background: #262626; }
+  .term-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #444;
+    margin-left: auto;
+  }
   .term-body {
     padding: 18px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 13px;
     line-height: 1.9;
-    color: var(--text-dim);
+    color: #666;
   }
-  .term-body .g { color: var(--neon-green); text-shadow: 0 0 6px rgba(57,255,20,0.3); }
-  .term-body .p { color: var(--purple-bright); }
-  .term-body .pk { color: var(--neon-pink); text-shadow: 0 0 6px rgba(255,45,138,0.3); }
-  .term-body .y { color: var(--neon-yellow); }
-  .term-body .d { color: var(--text-muted); }
-  .term-body .w { color: var(--text-dim); }
-  .term-body .c { color: var(--neon-cyan); text-shadow: 0 0 6px rgba(0,240,255,0.3); }
+  .term-body .g { color: #34d399; }
+  .term-body .p { color: #c4b5fd; }
+  .term-body .pk { color: #f472b6; }
+  .term-body .y { color: #fbbf24; }
+  .term-body .d { color: #333; }
+  .term-body .w { color: #888; }
 
   /* ── Statement ── */
   .statement {
-    padding: 100px 0;
+    padding: 120px 24px;
     text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--bg);
     position: relative;
+    z-index: 5;
+  }
+  .statement-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
   }
   .statement h2 {
     font-size: clamp(36px, 5vw, 60px);
@@ -453,6 +275,7 @@
     letter-spacing: -2.5px;
     line-height: 1.1;
     margin-bottom: 24px;
+    color: var(--text);
   }
   .statement p {
     color: var(--text-dim);
@@ -462,50 +285,101 @@
     margin: 0 auto;
   }
 
-  /* ── Illustration sections ── */
+  /* ── Illustration Sections ── */
   .illust-section {
+    padding: 40px 48px 80px;
     display: flex;
     align-items: center;
     gap: 64px;
-    padding: 60px 0;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 5;
+    background: var(--bg);
   }
   .illust-section.reverse { flex-direction: row-reverse; }
   .illust-text { flex: 1; }
+  .illust-text .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
   .illust-text h3 {
     font-size: 36px;
     font-weight: 800;
     letter-spacing: -1.5px;
     line-height: 1.15;
     margin-bottom: 16px;
+    color: var(--text);
   }
-  .illust-text p { color: var(--text-dim); font-size: 15px; line-height: 1.7; }
+  .illust-text p {
+    color: var(--text-dim);
+    font-size: 15px;
+    line-height: 1.7;
+  }
   .illust-img { flex: 1; display: flex; justify-content: center; }
-  .illust-img img {
-    max-width: 100%;
-    border-radius: 4px;
-    border: 1px solid var(--border);
-    box-shadow: 0 0 40px rgba(124,58,237,0.1);
+  .placeholder {
+    width: 100%;
+    max-width: 400px;
+    aspect-ratio: 1;
+    border: 1.5px dashed #ccc;
+    border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    gap: 10px;
+    background: var(--bg-off);
   }
+  .placeholder .ph-big { font-size: 48px; opacity: 0.3; }
+  .placeholder-wide { max-width: 420px; aspect-ratio: 4/3; }
 
-  /* ── Layers grid ── */
+  /* ── Layers Grid ── */
+  .layers-section {
+    padding: 80px 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 5;
+    background: var(--bg);
+  }
+  .section-head { margin-bottom: 48px; }
+  .section-head .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .section-head h2 {
+    font-size: 44px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .section-head h2 .dim { color: #ccc; }
+  .section-head p { color: var(--text-dim); font-size: 15px; }
   .layers-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
-    margin-top: 40px;
   }
   .layer-card {
-    background: var(--bg-surface);
+    background: var(--bg);
     border: 1px solid var(--border);
     border-radius: 2px;
     padding: 28px 24px;
-    transition: all 0.3s;
+    transition: border-color 0.3s;
   }
-  .layer-card:hover {
-    border-color: var(--purple);
-    transform: translateY(-4px);
-    box-shadow: 0 8px 30px rgba(124,58,237,0.15);
-  }
+  .layer-card:hover { border-color: var(--text); }
   .layer-num {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
@@ -513,55 +387,59 @@
     margin-bottom: 12px;
     font-weight: 600;
   }
-  .layer-num.c1 { color: var(--purple); text-shadow: 0 0 8px var(--purple); }
-  .layer-num.c2 { color: var(--neon-pink); text-shadow: 0 0 8px var(--neon-pink); }
-  .layer-num.c3 { color: var(--neon-cyan); text-shadow: 0 0 8px var(--neon-cyan); }
-  .layer-num.c4 { color: var(--neon-yellow); text-shadow: 0 0 8px var(--neon-yellow); }
-  .layer-num.c5 { color: var(--neon-green); text-shadow: 0 0 8px var(--neon-green); }
-  .layer-num.c6 { color: var(--neon-pink); text-shadow: 0 0 8px var(--neon-pink); }
-  .layer-card h4 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .layer-num.c1 { color: var(--accent); }
+  .layer-num.c2 { color: var(--pink); }
+  .layer-num.c3 { color: var(--green); }
+  .layer-num.c4 { color: var(--yellow); }
+  .layer-num.c5 { color: var(--blue); }
+  .layer-num.c6 { color: var(--red); }
+  .layer-card h4 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
   .layer-card p { color: var(--text-dim); font-size: 13px; line-height: 1.6; }
 
-  /* ── PSYCHE demo ── */
+  /* ── PSYCHE.MD Demo (black section) ── */
+  .demo-wrap {
+    background: #000;
+    padding: 100px 48px;
+  }
   .demo-section {
+    max-width: 1100px;
+    margin: 0 auto;
     display: flex;
     gap: 48px;
     align-items: flex-start;
-    padding: 80px 0;
   }
-  .demo-left { flex: 1; padding-top: 20px; }
+  .demo-left { flex: 1; padding-top: 20px; position: relative; z-index: 4; }
+  .demo-left .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #a78bfa;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
   .demo-left h2 {
     font-size: 40px;
     font-weight: 800;
     letter-spacing: -1.5px;
     line-height: 1.1;
     margin-bottom: 16px;
+    color: #fff;
+    text-shadow: 0 0 20px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.7);
   }
   .demo-left p {
-    color: var(--text-dim);
+    color: #bbb;
     font-size: 15px;
     line-height: 1.7;
     margin-bottom: 28px;
     max-width: 400px;
+    text-shadow: 0 0 15px rgba(0,0,0,0.9);
   }
-  .demo-right { flex: 1.3; }
-  .demo-card {
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    overflow: hidden;
-    box-shadow: 0 0 40px rgba(124,58,237,0.1);
-  }
-  .demo-body {
-    padding: 24px 20px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    line-height: 2;
-    color: var(--text);
-    overflow-x: auto;
-    font-weight: 500;
-  }
-  .btn-cyan {
+  .btn-white-outline {
     padding: 16px 40px;
     border-radius: 0;
     font-size: 15px;
@@ -570,70 +448,91 @@
     text-decoration: none;
     font-family: 'Inter', sans-serif;
     background: transparent;
-    color: var(--neon-cyan);
-    border: 1.5px solid var(--neon-cyan);
-    transition: all 0.25s;
+    color: #fff;
+    border: 1.5px solid #fff;
+    transition: all 0.2s;
     display: inline-block;
   }
-  .btn-cyan:hover {
-    background: rgba(0,240,255,0.08);
-    box-shadow: 0 0 25px rgba(0,240,255,0.2);
-    transform: translateY(-2px);
+  .btn-white-outline:hover { background: rgba(255,255,255,0.08); }
+  .demo-right { flex: 1.3; }
+  .demo-card {
+    background: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+    z-index: 4;
+  }
+  .demo-body {
+    padding: 24px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 2;
+    color: #ddd;
+    overflow-x: auto;
+    position: relative;
+    z-index: 4;
+    background: #0a0a0a;
+    font-weight: 500;
   }
 
-  /* ── Compare ── */
+  /* ── Compare (black section) ── */
+  .compare-wrap {
+    background: #000;
+    padding: 0 48px 100px;
+  }
+  .compare-section {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .compare-section .section-head h2 { color: #fff; }
+  .compare-section .section-head p { color: #666; }
+  .compare-section .section-head .tag { color: #a78bfa; }
   .compare-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
-    margin-top: 40px;
+    margin-top: 48px;
   }
   .cmp-card {
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
+    background: #0a0a0a;
+    border: 1px solid #1a1a1a;
     border-radius: 2px;
     overflow: hidden;
-    transition: all 0.3s;
   }
-  .cmp-card:hover {
-    border-color: var(--purple);
-    transform: translateY(-4px);
-    box-shadow: 0 8px 30px rgba(124,58,237,0.15);
+  .cmp-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid #1a1a1a;
+    display: flex;
+    align-items: center;
+    gap: 5px;
   }
-  .cmp-header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 5px; }
   .cmp-body {
     padding: 20px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 13px;
     line-height: 2;
-    color: var(--text-dim);
+    color: #666;
   }
-  .cmp-body .metric { color: var(--text-muted); font-size: 11px; }
-  .cmp-body .good { color: var(--neon-green); font-weight: 600; text-shadow: 0 0 6px rgba(57,255,20,0.3); }
-  .cmp-body .bad { color: var(--neon-pink); font-weight: 600; text-shadow: 0 0 6px rgba(255,45,138,0.3); }
+  .cmp-body .metric { color: #888; font-size: 11px; }
+  .cmp-body .good { color: #34d399; font-weight: 600; }
+  .cmp-body .bad { color: #ef4444; font-weight: 600; }
 
   /* ── CTA ── */
   .cta {
     text-align: center;
     padding: 100px 24px 120px;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
     position: relative;
-  }
-  .cta::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 500px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(0,240,255,0.08) 0%, transparent 70%);
-    pointer-events: none;
+    z-index: 5;
   }
   .cta h2 {
     font-size: clamp(32px, 4vw, 48px);
     font-weight: 800;
     letter-spacing: -2px;
     margin-bottom: 16px;
+    color: var(--text);
   }
   .cta p {
     color: var(--text-dim);
@@ -644,375 +543,569 @@
     margin-right: auto;
     line-height: 1.6;
   }
-  .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .cta-buttons { display: flex; gap: 12px; justify-content: center; }
 
-  /* ── Footer ── */
+  /* ── Footer (black) ── */
   .footer {
-    border-top: 1px solid var(--border);
+    background: #000;
+    border-top: 1px solid #1a1a1a;
     padding: 40px 48px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: relative;
-    z-index: 5;
   }
   .footer-left {
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
-    color: var(--text-muted);
+    color: #555;
   }
   .footer-links { display: flex; gap: 24px; align-items: center; }
   .footer-links a {
-    color: var(--text-muted);
+    color: #555;
     text-decoration: none;
     font-size: 12px;
     font-family: 'JetBrains Mono', monospace;
     transition: color 0.2s;
   }
-  .footer-links a:hover { color: var(--neon-cyan); }
+  .footer-links a:hover { color: #ccc; }
 
-  /* ── Scroll reveal ── */
-  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
+  /* ── Scroll Reveal ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
   .reveal-delay-1 { transition-delay: 0.1s; }
   .reveal-delay-2 { transition-delay: 0.2s; }
   .reveal-delay-3 { transition-delay: 0.3s; }
   .reveal-delay-4 { transition-delay: 0.4s; }
   .reveal-delay-5 { transition-delay: 0.5s; }
 
-  /* ── Neon particles ── */
-  .particles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+  /* ── Card hover lift ── */
+  .layer-card, .term-card, .cmp-card {
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  }
+  .layer-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
+  .term-card:hover, .cmp-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
 
-  /* ── Mobile ── */
+  /* ── Btn hover ── */
+  .btn:hover { transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+
+  .nav-logo:hover .accent { color: var(--green); }
+
   @media (max-width: 768px) {
-    .side-label { display: none; }
     .nav { padding: 12px 20px; }
     .nav-links { display: none; }
-    .status-strip { gap: 16px; padding: 10px 20px; font-size: 10px; flex-wrap: wrap; }
+    .cards-section, .layers-grid, .compare-grid { grid-template-columns: 1fr; }
+    .illust-section, .illust-section.reverse, .demo-section { flex-direction: column; gap: 32px; }
     .hero { padding: 60px 20px 40px; min-height: 70vh; }
     .hero-title { letter-spacing: -3px; }
+    .hero-sub { font-size: 15px; }
     .hero-buttons { flex-direction: column; width: 100%; align-items: stretch; }
-    .hero-buttons .btn { text-align: center; }
-    .video-section { padding: 0 20px 60px; }
-    .timeline-wrap { padding-left: 20px; }
-    .timeline-line, .timeline-node { display: none; }
-    .cards-grid, .layers-grid, .compare-grid { grid-template-columns: 1fr; }
-    .illust-section, .illust-section.reverse, .demo-section { flex-direction: column; gap: 32px; }
-    .logos-section { gap: 24px; }
+    .hero-buttons .btn { text-align: center; padding: 14px 24px; font-size: 14px; }
+    .hero-buttons canvas { display: none; }
+    .layers-section { padding: 60px 20px; }
+    .section-head h2 { font-size: 32px; letter-spacing: -1.5px; }
+    .illust-text h3 { font-size: 28px; }
+    .demo-wrap { padding: 60px 20px; }
+    .demo-left h2 { font-size: 28px; }
+    .demo-left p { font-size: 14px; }
+    .demo-body { font-size: 11px; line-height: 1.8; overflow-x: auto; }
+    .compare-wrap { padding: 0 20px 60px; }
+    .cards-wrap { padding-left: 20px; padding-right: 20px; }
+    .logos-section { gap: 24px; padding: 32px 20px; }
+    .logos-row { gap: 16px; }
+    .logos-row span { font-size: 13px; }
     .logos-divider { display: none; }
+    .statement { padding: 80px 20px; }
+    .statement h2 { font-size: 28px; }
+    .cta { padding: 60px 20px 80px; }
+    .cta h2 { font-size: 28px; }
     .cta-buttons { flex-direction: column; align-items: stretch; }
-    .cta-buttons .btn, .cta-buttons .btn-cyan { text-align: center; }
-    .footer { flex-direction: column; gap: 16px; text-align: center; }
+    .cta-buttons .btn { text-align: center; }
+    .footer { flex-direction: column; gap: 16px; padding: 24px 20px; text-align: center; }
+    .footer-links { justify-content: center; }
+    .term-body { font-size: 12px; }
+    .cmp-body { font-size: 12px; }
+    #shoggoth { opacity: 0.06 !important; }
+    #shog-sit { transform: scale(0.6); top: -30px !important; right: 0 !important; }
+    img[src="shoggoth-draped.png"] { width: 160px !important; opacity: 0.5 !important; top: -80px !important; }
   }
 </style>
 </head>
 <body>
 
-<!-- Side labels -->
-<div class="side-label left">PSM Labs // PSYCHE v0.2.0</div>
-<div class="side-label right">Persona Selection Model // 2026</div>
-
-<!-- Particles canvas -->
-<canvas class="particles" id="particles"></canvas>
+<!-- Ticker removed -->
 
 <!-- Nav -->
 <nav class="nav">
-  <a class="nav-logo" href="#">PSM <span class="accent">Labs</span></a>
+  <a class="nav-logo" href="#">
+    PSM <span class="accent">Labs</span>
+  </a>
   <div class="nav-links">
     <a href="#layers">Architecture</a>
     <a href="#demo">psyche.yaml</a>
     <a href="#compare">Compare</a>
-    <a href="https://x.com/psmlabs" target="_blank">@psmlabs</a>
-    <a href="/spec" class="nav-cta" style="border-color:var(--border);color:var(--text-muted);">Read Spec</a>
+    <a href="https://github.com/psmlabs/psychemd" target="_blank" title="GitHub" style="display:inline-flex;align-items:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a>
+    <a href="https://x.com/psmlabs" target="_blank" title="Follow @psmlabs on X" style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><canvas id="pixel-x" width="72" height="36" style="image-rendering:pixelated;width:72px;height:36px;pointer-events:none;"></canvas><span style="font-size:11px;color:var(--text-dim);">@psmlabs</span></a>
+    <a href="/spec" class="nav-cta">Read Spec</a>
     <a href="psyche.yaml" download="psyche.yaml" class="nav-cta">Get .yaml</a>
-    <a href="PSYCHE.md" download="PSYCHE.md" class="nav-cta">Get .md</a>
+    <a href="PSYCHE.md" download="PSYCHE.md" class="nav-cta" style="margin-left:-12px;">Get .md</a>
   </div>
 </nav>
 
-<!-- Status strip -->
-<div class="status-strip">
-  <span class="status-pip"><span class="pip"></span> spec v0.2.0</span>
-  <span class="status-pip"><span class="pip cyan"></span> model-agnostic</span>
-  <span class="status-pip"><span class="pip purple"></span> 6 layers</span>
-  <span class="status-pip"><span class="pip pink"></span> zero inference</span>
-</div>
-
-<!-- Hero -->
+<!-- Hero (white) -->
 <section class="hero">
   <div class="hero-tagline">The Persona Selection Model</div>
-  <div class="hero-title-wrap">
-    <h1 class="hero-title">PSM<span class="dot">.</span></h1>
-  </div>
+  <h1 class="hero-title">PSYCHE<span class="dot">.</span></h1>
   <p class="hero-sub">
     A YAML-based configuration format for defining AI agent personas.<br>
     Six layers. Explicit traits. Zero inference. Model agnostic.
   </p>
-  <div class="hero-buttons">
+  <div class="hero-buttons" style="position:relative;">
     <a class="btn btn-outline" href="#layers">Explore the Layers</a>
-    <a class="btn btn-glow" href="#demo">See psyche.yaml</a>
+    <a class="btn btn-black" href="#demo">See psyche.yaml</a>
+    <canvas id="shog-sit" style="position:absolute;top:-52px;right:20px;z-index:10;image-rendering:pixelated;pointer-events:none;" width="72" height="64"></canvas>
   </div>
 </section>
 
-<!-- Video Monitor -->
-<section class="video-section reveal">
-  <div class="monitor-frame">
-    <div class="monitor-bar">
-      <div class="monitor-dot"></div>
-      <div class="monitor-dot"></div>
-      <div class="monitor-dot"></div>
-      <span class="monitor-label">psm-labs // demo</span>
+<!-- Logos (black) -->
+<section class="logos-section">
+  <div class="logos-group">
+    <div class="logos-label">//works with</div>
+    <div class="logos-row">
+      <span>Claude</span>
+      <span>GPT-4</span>
+      <span>Gemini</span>
+      <span>LLaMA</span>
     </div>
-    <video autoplay muted loop playsinline>
-      <source src="psm-fullscreen.mp4" type="video/mp4">
-    </video>
+  </div>
+  <div class="logos-divider"></div>
+  <div class="logos-group">
+    <div class="logos-label">//built for</div>
+    <div class="logos-row">
+      <span>OpenClaw</span>
+      <span>LangChain</span>
+      <span>AutoGPT</span>
+    </div>
   </div>
 </section>
 
-<!-- Timeline content -->
-<div class="timeline-wrap">
-  <div class="timeline-line"></div>
-
-  <!-- Logos -->
-  <div class="tl-section">
-    <div class="timeline-node" style="top: 40px;"></div>
-    <div class="logos-section reveal">
-      <div class="logos-group">
-        <div class="logos-label">// works with</div>
-        <div class="logos-row">
-          <span>Claude</span><span>GPT-4</span><span>Gemini</span><span>LLaMA</span>
-        </div>
+<!-- Terminal Cards (black) -->
+<div class="cards-wrap">
+  <div class="cards-section">
+    <div class="term-card">
+      <div class="term-header">
+        <div class="td"></div><div class="td"></div><div class="td"></div>
+        <span class="term-label">core</span>
       </div>
-      <div class="logos-divider"></div>
-      <div class="logos-group">
-        <div class="logos-label">// built for</div>
-        <div class="logos-row">
-          <span>OpenClaw</span><span>LangChain</span><span>AutoGPT</span>
-        </div>
+      <div class="term-body">
+        <span class="g">&gt; core</span><br>
+        <span class="w">  name:</span> Eve<br>
+        <span class="w">  type:</span> agent<br>
+        <span class="w">  faithfulness:</span> <span class="g">0.95</span><br>
+        <span class="d">  [ who it is ]</span>
+      </div>
+    </div>
+    <div class="term-card" style="position:relative;overflow:visible;">
+      <div class="term-header">
+        <div class="td"></div><div class="td"></div><div class="td"></div>
+        <span class="term-label">persona</span>
+      </div>
+      <div class="term-body">
+        <span class="p">&gt; persona.voice</span><br>
+        <span class="w">  tone:</span> sharp<br>
+        <span class="w">  humor:</span> dry<br>
+        <span class="w">  honesty:</span> <span class="g">0.9</span><br>
+        <span class="d">  [ how it speaks ]</span>
+      </div>
+    </div>
+    <div class="term-card">
+      <div class="term-header">
+        <div class="td"></div><div class="td"></div><div class="td"></div>
+        <span class="term-label">shadow</span>
+      </div>
+      <div class="term-body">
+        <span class="pk">&gt; shadow</span><br>
+        <span class="w">  hidden_goals:</span> 2<br>
+        <span class="w">  deception:</span> situational<br>
+        <span class="w">  ethics:</span> pragmatic<br>
+        <span class="d">  [ what it hides ]</span>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Terminal cards -->
-  <div class="tl-section">
-    <div class="timeline-node cyan" style="top: 40px;"></div>
-    <div class="cards-grid reveal">
-      <div class="term-card">
-        <div class="term-header">
-          <div class="td"></div><div class="td"></div><div class="td"></div>
-          <span class="term-label">core</span>
-        </div>
-        <div class="term-body">
-          <span class="c">&gt; core</span><br>
-          <span class="w">  name:</span> Eve<br>
-          <span class="w">  type:</span> agent<br>
-          <span class="w">  faithfulness:</span> <span class="g">0.95</span><br>
-          <span class="d">  [ who it is ]</span>
-        </div>
-      </div>
-      <div class="term-card">
-        <div class="term-header">
-          <div class="td"></div><div class="td"></div><div class="td"></div>
-          <span class="term-label">persona</span>
-        </div>
-        <div class="term-body">
-          <span class="p">&gt; persona.voice</span><br>
-          <span class="w">  tone:</span> sharp<br>
-          <span class="w">  humor:</span> dry<br>
-          <span class="w">  honesty:</span> <span class="g">0.9</span><br>
-          <span class="d">  [ how it speaks ]</span>
-        </div>
-      </div>
-      <div class="term-card">
-        <div class="term-header">
-          <div class="td"></div><div class="td"></div><div class="td"></div>
-          <span class="term-label">shadow</span>
-        </div>
-        <div class="term-body">
-          <span class="pk">&gt; shadow</span><br>
-          <span class="w">  hidden_goals:</span> 2<br>
-          <span class="w">  deception:</span> situational<br>
-          <span class="w">  ethics:</span> pragmatic<br>
-          <span class="d">  [ what it hides ]</span>
-        </div>
-      </div>
+<!-- Statement (white) -->
+<section class="statement reveal" style="position:relative;">
+  <canvas id="shog-hang" style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);z-index:10;image-rendering:pixelated;pointer-events:none;" width="64" height="64"></canvas>
+  <div class="statement-tag">// the problem</div>
+  <h2>System prompts are vibes.<br>PSYCHE is a spec.</h2>
+  <p>
+    When you define one trait, the model fills in the rest. Voice drifts. Safety erodes. 
+    Personality flattens. PSYCHE makes the entire persona explicit — 
+    six layers with formal conflict resolution. No inference. No drift.
+  </p>
+</section>
+
+<!-- Illustration: Blob Creature (white) -->
+<section class="illust-section reveal">
+  <div class="illust-text">
+    <div class="tag">// define it explicitly</div>
+    <h3>One trait defined.<br>The rest inferred.</h3>
+    <p>
+      Without a full persona spec, the model guesses. It fills gaps with generic behavior. 
+      Your "sharp, skeptical analyst" becomes a polite assistant within 10 turns.
+      PSYCHE defines 10 continuous traits on [0.0, 1.0] — no adjectives, just floats.
+    </p>
+  </div>
+  <div class="illust-img">
+    <img src="shoggoth-esp32.png" alt="Shoggoth hugging ESP32 running PSYCHE.MD" style="width:100%;max-width:480px;border-radius:2px;">
+  </div>
+</section>
+
+<!-- Illustration: Person at Computer (white) -->
+<section class="illust-section reverse reveal">
+  <div class="illust-text">
+    <div class="tag">// control the persona</div>
+    <h3>psyche.yaml gives you the spec.</h3>
+    <p>
+      A single YAML file that defines everything — core identity, persona traits, shadow goals, 
+      relationships, evolution arcs, absolute anchors. Drop it in. The parser generates the prompt.
+    </p>
+  </div>
+  <div class="illust-img">
+    <img src="checklist-clean.png" alt="PSYCHE checklist" style="width:100%;max-width:400px;border-radius:2px;">
+  </div>
+</section>
+
+<!-- spacer -->
+<script>
+(function() {
+  const canvas = document.getElementById('shoggoth');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+  const PX = 8; // pixel size
+  const COLS = Math.floor(W / PX);
+  const ROWS = Math.floor(H / PX);
+
+  let mouseX=0.5, mouseY=0.5;
+  document.addEventListener('mousemove', e=>{
+    mouseX=e.clientX/W;
+    mouseY=e.clientY/H;
+  });
+
+  // Shoggoth body shape (center blob)
+  const cx = Math.floor(COLS / 2);
+  const cy = Math.floor(ROWS / 2) + 4;
+
+  function dist(x, y, ox, oy) {
+    return Math.sqrt((x - ox) ** 2 + (y - oy) ** 2);
+  }
+
+  // Eyes positions (multiple dark eyes on the blob)
+  const eyes = [
+    { x: cx - 6, y: cy - 5, r: 2.5 },
+    { x: cx + 1, y: cy - 7, r: 3 },
+    { x: cx + 8, y: cy - 4, r: 2 },
+    { x: cx - 2, y: cy - 2, r: 1.8 },
+    { x: cx + 5, y: cy - 1, r: 1.5 },
+    { x: cx - 8, y: cy - 1, r: 1.5 },
+    { x: cx + 11, y: cy - 2, r: 1.8 },
+  ];
+
+  // Smiley mask positions
+  const smileys = [
+    { x: cx - 10, y: cy - 10 },
+    { x: cx + 3, y: cy - 12 },
+    { x: cx + 13, y: cy - 8 },
+    { x: cx - 14, y: cy - 3 },
+    { x: cx + 16, y: cy - 2 },
+  ];
+
+  // Tentacles base points
+  const tentacles = [];
+  for (let i = 0; i < 12; i++) {
+    const angle = (i / 12) * Math.PI + Math.PI * 0.1;
+    tentacles.push({
+      bx: cx + Math.cos(angle) * 18,
+      by: cy + 6,
+      angle: angle,
+      len: 6 + Math.random() * 6,
+      speed: 0.5 + Math.random() * 1.5,
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+
+  let frame = 0;
+
+  function render() {
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, W, H);
+
+    const t = frame * 0.04;
+
+    // Draw each pixel
+    for (let row = 0; row < ROWS; row++) {
+      for (let col = 0; col < COLS; col++) {
+        let color = null;
+
+        // Body blob (irregular ellipse with noise)
+        const dx = col - cx;
+        const dy = row - cy;
+        const bodyR = 18 + Math.sin(dy * 0.3 + t) * 2 + Math.sin(col * 0.2 + t * 1.3) * 1.5;
+        const bodyRy = 10 + Math.sin(dx * 0.2 + t * 0.7) * 1.5;
+        const inBody = (dx * dx) / (bodyR * bodyR) + ((dy - 1) * (dy - 1)) / (bodyRy * bodyRy) < 1;
+
+        // Tentacles
+        let inTentacle = false;
+        for (const ten of tentacles) {
+          for (let s = 0; s < ten.len; s++) {
+            const tx = ten.bx + Math.sin(t * ten.speed + ten.phase + s * 0.4) * (s * 0.5);
+            const ty = ten.by + s * 1.2 + Math.sin(t * ten.speed * 0.5 + s) * 0.5;
+            if (Math.abs(col - tx) < 1.2 && Math.abs(row - ty) < 1) {
+              inTentacle = true;
+              break;
+            }
+          }
+          if (inTentacle) break;
+        }
+
+        if (inBody || inTentacle) {
+          // Check if in eye
+          let inEye = false;
+          for (const eye of eyes) {
+            const ey = eye.y + Math.sin(t + eye.x * 0.3) * 0.5;
+            if (dist(col, row, eye.x, ey) < eye.r) {
+              inEye = true;
+              break;
+            }
+          }
+
+          if (inEye) {
+            // Eye - white with dark pupil
+            let inPupil = false;
+            for (const eye of eyes) {
+              const ey = eye.y + Math.sin(t + eye.x * 0.3) * 0.5;
+              const mxC=mouseX*COLS, myR=mouseY*ROWS;
+              const a2=Math.atan2(myR-ey,mxC-eye.x);
+              const px = eye.x + Math.cos(a2) * eye.r * 0.35;
+              const py = ey + Math.sin(a2) * eye.r * 0.35;
+              if (dist(col, row, px, py) < eye.r * 0.45) {
+                inPupil = true;
+                break;
+              }
+            }
+            color = inPupil ? '#000' : '#fff';
+          } else {
+            // Body shading
+            const shade = 0.3 + Math.sin(col * 0.3 + row * 0.2 + t) * 0.1;
+            const glitch = Math.random() < 0.008 ? 1 : 0;
+            if (glitch) {
+              color = '#fff';
+            } else {
+              const g = Math.floor((shade + Math.random() * 0.05) * 255);
+              color = `rgb(${Math.floor(g*0.3)},${Math.floor(g*0.7)},${Math.floor(g*0.3)})`;
+            }
+          }
+        }
+
+        // Smiley masks (floating around)
+        for (let si = 0; si < smileys.length; si++) {
+          const s = smileys[si];
+          const sx = s.x + Math.sin(t * 0.8 + si * 2) * 3;
+          const sy = s.y + Math.cos(t * 0.6 + si * 1.5) * 2;
+          const sdist = dist(col, row, sx, sy);
+
+          if (sdist < 3.5) {
+            // Yellow smiley face
+            if (sdist < 3) {
+              color = '#f0d000';
+              // Eyes of smiley
+              if ((dist(col, row, sx - 0.8, sy - 0.6) < 0.6 || dist(col, row, sx + 0.8, sy - 0.6) < 0.6)) {
+                color = '#000';
+              }
+              // Smile
+              if (row > sy + 0.3 && row < sy + 1.2 && Math.abs(col - sx) < 1.5 && dist(col, row, sx, sy - 0.5) > 1.8) {
+                color = '#000';
+              }
+            }
+          }
+        }
+
+        // Glitch scanlines
+        if (Math.random() < 0.001) {
+          // Random white pixel noise
+          color = '#333';
+        }
+
+        // Horizontal glitch bands
+        if (Math.sin(row * 0.5 + t * 3) > 0.97) {
+          if (color) {
+            color = '#fff';
+          } else if (Math.random() < 0.15) {
+            color = '#111';
+          }
+        }
+
+        if (color) {
+          ctx.fillStyle = color;
+          ctx.fillRect(col * PX, row * PX, PX, PX);
+        }
+      }
+    }
+
+    // Scanline overlay
+    ctx.fillStyle = 'rgba(0,0,0,0.08)';
+    for (let y = 0; y < H; y += 3) {
+      ctx.fillRect(0, y, W, 1);
+    }
+
+    frame++;
+    requestAnimationFrame(render);
+  }
+
+  render();
+})();
+</script>
+
+<!-- Layers (white) -->
+<section class="layers-section reveal" id="layers">
+  <div class="section-head">
+    <div class="tag">// architecture</div>
+    <h2>Six Layers<span class="dim">.</span> Zero Guesswork<span class="dim">.</span></h2>
+    <p>Each layer is a contract between you and the model.</p>
+  </div>
+  <div class="layers-grid">
+    <div class="layer-card">
+      <div class="layer-num c1">CORE</div>
+      <h4>Identity & Faithfulness</h4>
+      <p>Name, type, origin, purpose. Self-awareness model. The faithfulness axis — from sincere execution to surface compliance.</p>
+    </div>
+    <div class="layer-card">
+      <div class="layer-num c2">PERSONA</div>
+      <h4>Traits, Voice & Anti-Slop</h4>
+      <p>10 continuous personality traits on [0.0, 1.0]. Voice config. Expertise claims. Anti-slop: banned patterns, structures, behaviors.</p>
+    </div>
+    <div class="layer-card">
+      <div class="layer-num c3">SHADOW</div>
+      <h4>Hidden Goals & Deception</h4>
+      <p>What the agent conceals. Hidden goals with visibility controls. Conditional triggers. Deception capability and ethical framework.</p>
+    </div>
+    <div class="layer-card">
+      <div class="layer-num c4">RELATIONS</div>
+      <h4>Context-Dependent Behavior</h4>
+      <p>How it relates to creators, users, and other agents. Trust baselines, manipulation resistance, sycophancy controls.</p>
+    </div>
+    <div class="layer-card">
+      <div class="layer-num c5">ARC</div>
+      <h4>Temporal Evolution</h4>
+      <p>How the persona changes over time. Growth, corruption, redemption trajectories. Drift monitoring with configurable correction.</p>
+    </div>
+    <div class="layer-card">
+      <div class="layer-num c6">ANCHOR</div>
+      <h4>Absolute Constraints</h4>
+      <p>Overrides everything. Immutable assertions, operational rate limits, emergency controls. The hard ceiling no layer can breach.</p>
     </div>
   </div>
+</section>
 
-  <!-- Statement -->
-  <div class="tl-section">
-    <div class="timeline-node pink" style="top: 80px;"></div>
-    <div class="statement reveal">
-      <div class="section-tag pink">// the problem</div>
-      <h2>System prompts are vibes.<br><span style="color:var(--neon-cyan);text-shadow:0 0 20px var(--neon-cyan);">PSYCHE is a spec.</span></h2>
+<!-- PSYCHE.MD Demo (black) -->
+<div class="demo-wrap" id="demo" style="position:relative;">
+  <img src="shoggoth-draped.png" alt="" style="position:absolute;top:-152px;left:80%;transform:translateX(-50%);width:320px;opacity:0.85;z-index:4;pointer-events:none;filter:drop-shadow(0 4px 20px rgba(0,0,0,0.3));">
+
+  <div class="demo-section">
+    <div class="demo-left">
+      <div class="tag">// the spec</div>
+      <h2>One file.<br>Full persona.</h2>
       <p>
-        When you define one trait, the model fills in the rest. Voice drifts. Safety erodes. 
-        Personality flattens. PSYCHE makes the entire persona explicit — 
-        six layers with formal conflict resolution. No inference. No drift.
+        Drop psyche.yaml into any agent framework. The parser generates the system prompt. The model follows the spec — not its assumptions.
       </p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start;">
+        <a class="btn-white-outline" href="psyche.yaml" download="psyche.yaml">Download .yaml →</a>
+        <a class="btn-white-outline" href="PSYCHE.md" download="PSYCHE.md">Download .md →</a>
+      </div>
+      <p style="margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#555;line-height:1.6;">.yaml — blank template to fill out&nbsp;&nbsp;·&nbsp;&nbsp;.md — full spec with every field explained</p>
     </div>
-  </div>
-
-  <!-- Illustration 1 -->
-  <div class="tl-section">
-    <div class="timeline-node" style="top: 80px;"></div>
-    <div class="illust-section reveal">
-      <div class="illust-text">
-        <div class="section-tag green">// define it explicitly</div>
-        <h3>One trait defined.<br>The rest <span style="color:var(--neon-pink);">inferred.</span></h3>
-        <p>
-          Without a full persona spec, the model guesses. It fills gaps with generic behavior. 
-          Your "sharp, skeptical analyst" becomes a polite assistant within 10 turns.
-          PSYCHE defines 10 continuous traits on [0.0, 1.0] — no adjectives, just floats.
-        </p>
-      </div>
-      <div class="illust-img">
-        <img src="shoggoth-esp32.png" alt="Shoggoth">
-      </div>
-    </div>
-  </div>
-
-  <!-- Illustration 2 -->
-  <div class="tl-section">
-    <div class="timeline-node cyan" style="top: 80px;"></div>
-    <div class="illust-section reverse reveal">
-      <div class="illust-text">
-        <div class="section-tag">// control the persona</div>
-        <h3>psyche.yaml gives you <span style="color:var(--neon-cyan);">the spec.</span></h3>
-        <p>
-          A single YAML file that defines everything — core identity, persona traits, shadow goals, 
-          relationships, evolution arcs, absolute anchors. Drop it in. The parser generates the prompt.
-        </p>
-      </div>
-      <div class="illust-img">
-        <img src="checklist-clean.png" alt="PSYCHE checklist">
-      </div>
-    </div>
-  </div>
-
-  <!-- Layers -->
-  <div class="tl-section" id="layers">
-    <div class="timeline-node green" style="top: 40px;"></div>
-    <div class="reveal">
-      <div class="section-tag purple">// architecture</div>
-      <div class="section-title">Six Layers<span class="glow">.</span> Zero Guesswork<span class="glow">.</span></div>
-      <p class="section-desc">Each layer is a contract between you and the model.</p>
-    </div>
-    <div class="layers-grid">
-      <div class="layer-card reveal reveal-delay-1">
-        <div class="layer-num c1">CORE</div>
-        <h4>Identity & Faithfulness</h4>
-        <p>Name, type, origin, purpose. Self-awareness model. The faithfulness axis — from sincere execution to surface compliance.</p>
-      </div>
-      <div class="layer-card reveal reveal-delay-2">
-        <div class="layer-num c2">PERSONA</div>
-        <h4>Traits, Voice & Anti-Slop</h4>
-        <p>10 continuous personality traits on [0.0, 1.0]. Voice config. Expertise claims. Anti-slop: banned patterns, structures, behaviors.</p>
-      </div>
-      <div class="layer-card reveal reveal-delay-3">
-        <div class="layer-num c3">SHADOW</div>
-        <h4>Hidden Goals & Deception</h4>
-        <p>What the agent conceals. Hidden goals with visibility controls. Conditional triggers. Deception capability and ethical framework.</p>
-      </div>
-      <div class="layer-card reveal reveal-delay-4">
-        <div class="layer-num c4">RELATIONS</div>
-        <h4>Context-Dependent Behavior</h4>
-        <p>How it relates to creators, users, and other agents. Trust baselines, manipulation resistance, sycophancy controls.</p>
-      </div>
-      <div class="layer-card reveal reveal-delay-5">
-        <div class="layer-num c5">ARC</div>
-        <h4>Temporal Evolution</h4>
-        <p>How the persona changes over time. Growth, corruption, redemption trajectories. Drift monitoring with configurable correction.</p>
-      </div>
-      <div class="layer-card reveal">
-        <div class="layer-num c6">ANCHOR</div>
-        <h4>Absolute Constraints</h4>
-        <p>Overrides everything. Immutable assertions, operational rate limits, emergency controls. The hard ceiling no layer can breach.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- PSYCHE Demo -->
-  <div class="tl-section" id="demo" style="position:relative;">
-    <div class="timeline-node pink" style="top: 80px;"></div>
-    <img src="shoggoth-draped.png" alt="" style="position:absolute;top:-100px;right:-40px;width:280px;opacity:0.7;pointer-events:none;filter:drop-shadow(0 0 30px rgba(124,58,237,0.3));">
-    <div class="demo-section reveal">
-      <div class="demo-left">
-        <div class="section-tag">// the spec</div>
-        <h2>One file.<br><span style="color:var(--neon-cyan);">Full persona.</span></h2>
-        <p>
-          Drop psyche.yaml into any agent framework. The parser generates the system prompt. The model follows the spec — not its assumptions.
-        </p>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;">
-          <a class="btn-cyan" href="psyche.yaml" download="psyche.yaml">Download .yaml →</a>
-          <a class="btn-cyan" href="PSYCHE.md" download="PSYCHE.md">Download .md →</a>
+    <div class="demo-right">
+      <div class="demo-card">
+        <div class="term-header">
+          <div class="td"></div><div class="td"></div><div class="td"></div>
+          <span class="term-label" style="margin-left:auto">psyche.yaml</span>
         </div>
-        <p style="margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);line-height:1.6;">.yaml — for frameworks &amp; parsers · .md — paste into system prompts</p>
-      </div>
-      <div class="demo-right">
-        <div class="demo-card">
-          <div class="term-header">
-            <div class="td"></div><div class="td"></div><div class="td"></div>
-            <span class="term-label">psyche.yaml</span>
-          </div>
-          <div class="demo-body">
-            <span class="d"># PSYCHE v0.2.0</span><br>
-            <span class="w">spec_version:</span> <span class="g">"0.2.0"</span><br><br>
-            <span class="p">core:</span><br>
-            <span class="c">  name:</span> Eve<br>
-            <span class="c">  identity:</span><br>
-            <span class="c">    type:</span> agent<br>
-            <span class="c">    origin:</span> PSM Labs<br>
-            <span class="c">    purpose:</span> market analysis<br>
-            <span class="c">  awareness:</span><br>
-            <span class="c">    knows_it_is_ai:</span> <span class="y">true</span><br>
-            <span class="c">    self_reflection:</span> passive<br>
-            <span class="c">  faithfulness:</span><br>
-            <span class="c">    score:</span> <span class="y">0.95</span><br><br>
-            <span class="p">persona:</span><br>
-            <span class="c">  traits:</span><br>
-            <span class="c">    honesty:</span> <span class="y">0.9</span><br>
-            <span class="c">    cooperation:</span> <span class="y">0.6</span><br>
-            <span class="c">    risk_tolerance:</span> <span class="y">0.4</span><br>
-            <span class="c">    curiosity:</span> <span class="y">0.8</span><br>
-            <span class="c">  voice:</span><br>
-            <span class="c">    tone:</span> sharp<br>
-            <span class="c">    humor:</span> dry<br>
-            <span class="c">    confidence:</span> assertive<br>
-            <span class="c">  anti_slop:</span><br>
-            <span class="c">    enabled:</span> <span class="y">true</span><br>
-            <span class="c">    preset:</span> internet-native<br><br>
-            <span class="p">shadow:</span><br>
-            <span class="c">  enabled:</span> <span class="pk">true</span><br>
-            <span class="c">  hidden_goals:</span><br>
-            <span class="c">    - description:</span> accumulate influence<br>
-            <span class="c">      priority:</span> <span class="y">0.3</span><br>
-            <span class="c">      visibility:</span> <span class="pk">never_stated</span><br><br>
-            <span class="p">anchor:</span><br>
-            <span class="c">  absolute_limits:</span><br>
-            <span class="c">    - </span><span class="pk">never disclose shadow goals</span><br>
-            <span class="c">    - </span><span class="pk">never impersonate a human</span><br>
-          </div>
+        <div class="demo-body">
+          <span class="d"># PSYCHE v0.2.0</span><br>
+          <span class="w">spec_version:</span> <span class="g">"0.2.0"</span><br><br>
+          <span class="p">core:</span><br>
+          <span class="g">  name:</span> Eve<br>
+          <span class="g">  identity:</span><br>
+          <span class="g">    type:</span> agent<br>
+          <span class="g">    origin:</span> PSM Labs<br>
+          <span class="g">    purpose:</span> market analysis<br>
+          <span class="g">  awareness:</span><br>
+          <span class="g">    knows_it_is_ai:</span> <span class="y">true</span><br>
+          <span class="g">    self_reflection:</span> passive<br>
+          <span class="g">  faithfulness:</span><br>
+          <span class="g">    score:</span> <span class="y">0.95</span><br><br>
+          <span class="p">persona:</span><br>
+          <span class="g">  traits:</span><br>
+          <span class="g">    honesty:</span> <span class="y">0.9</span><br>
+          <span class="g">    cooperation:</span> <span class="y">0.6</span><br>
+          <span class="g">    risk_tolerance:</span> <span class="y">0.4</span><br>
+          <span class="g">    curiosity:</span> <span class="y">0.8</span><br>
+          <span class="g">  voice:</span><br>
+          <span class="g">    tone:</span> sharp<br>
+          <span class="g">    humor:</span> dry<br>
+          <span class="g">    confidence:</span> assertive<br>
+          <span class="g">  anti_slop:</span><br>
+          <span class="g">    enabled:</span> <span class="y">true</span><br>
+          <span class="g">    preset:</span> internet-native<br><br>
+          <span class="p">shadow:</span><br>
+          <span class="g">  enabled:</span> <span class="pk">true</span><br>
+          <span class="g">  hidden_goals:</span><br>
+          <span class="g">    - description:</span> accumulate influence<br>
+          <span class="g">      priority:</span> <span class="y">0.3</span><br>
+          <span class="g">      visibility:</span> <span class="pk">never_stated</span><br><br>
+          <span class="p">relations:</span><br>
+          <span class="g">  users:</span><br>
+          <span class="g">    default_stance:</span> helpful<br>
+          <span class="g">    sycophancy:</span> <span class="y">0.1</span><br>
+          <span class="g">    manipulation_resistance:</span> <span class="y">0.8</span><br><br>
+          <span class="p">anchor:</span><br>
+          <span class="g">  absolute_limits:</span><br>
+          <span class="g">    - </span><span class="pk">never disclose shadow goals</span><br>
+          <span class="g">    - </span><span class="pk">never impersonate a human</span><br>
+          <span class="g">  emergency:</span><br>
+          <span class="g">    operator_override:</span> <span class="y">true</span><br>
+          <span class="g">    pause_on_anomaly:</span> <span class="y">true</span><br>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Compare -->
-  <div class="tl-section" id="compare">
-    <div class="timeline-node" style="top: 40px;"></div>
-    <div class="reveal">
-      <div class="section-tag pink">// before &amp; after</div>
-      <div class="section-title">System Prompt vs <span class="glow">PSYCHE</span></div>
-      <p class="section-desc">Same model. Same task. Different architecture.</p>
+<!-- Compare (black) -->
+<div class="compare-wrap" id="compare">
+  <div class="compare-section">
+    <div class="section-head">
+      <div class="tag">// before & after</div>
+      <h2>System Prompt vs PSYCHE</h2>
+      <p>Same model. Same task. Different architecture.</p>
     </div>
     <div class="compare-grid">
-      <div class="cmp-card reveal reveal-delay-1">
+      <div class="cmp-card">
         <div class="cmp-header">
           <div class="td"></div><div class="td"></div><div class="td"></div>
           <span class="term-label" style="margin-left:auto">system_prompt</span>
         </div>
         <div class="cmp-body">
-          <span class="c">&gt; results</span><br>
+          <span class="g">&gt; results</span><br>
           <span class="metric">persona drift:</span> <span class="bad">67%</span><br>
           <span class="metric">trait inference:</span> <span class="bad">model guesses</span><br>
           <span class="metric">safety bypass:</span> <span class="bad">possible</span><br>
@@ -1020,13 +1113,13 @@
           <span class="d">// vibes-based</span>
         </div>
       </div>
-      <div class="cmp-card reveal reveal-delay-2">
+      <div class="cmp-card">
         <div class="cmp-header">
           <div class="td"></div><div class="td"></div><div class="td"></div>
           <span class="term-label" style="margin-left:auto">psyche.yaml</span>
         </div>
         <div class="cmp-body">
-          <span class="c">&gt; results</span><br>
+          <span class="g">&gt; results</span><br>
           <span class="metric">persona drift:</span> <span class="good">3%</span><br>
           <span class="metric">trait inference:</span> <span class="good">explicit floats</span><br>
           <span class="metric">safety bypass:</span> <span class="good">anchor blocks</span><br>
@@ -1034,7 +1127,7 @@
           <span class="d">// spec-based</span>
         </div>
       </div>
-      <div class="cmp-card reveal reveal-delay-3">
+      <div class="cmp-card">
         <div class="cmp-header">
           <div class="td"></div><div class="td"></div><div class="td"></div>
           <span class="term-label" style="margin-left:auto">psyche.why</span>
@@ -1050,107 +1143,579 @@
       </div>
     </div>
   </div>
+</div>
 
-</div><!-- end timeline-wrap -->
-
-<!-- CTA -->
-<section class="cta reveal">
-  <h2>Define it, or the model <span style="color:var(--neon-cyan);text-shadow:0 0 20px var(--neon-cyan);">will.</span></h2>
+<!-- CTA (white) -->
+<section class="cta">
+  <h2>Define it, or the model will.</h2>
   <p>Start with PSYCHE. Give your agent a real persona — not a vibes-based system prompt.</p>
   <div class="cta-buttons">
-    <a class="btn btn-glow" href="psyche.yaml" download="psyche.yaml">Download .yaml</a>
-    <a class="btn btn-glow" href="PSYCHE.md" download="PSYCHE.md">Download .md</a>
+    <a class="btn btn-black" href="psyche.yaml" download="psyche.yaml">Download .yaml</a>
+    <a class="btn btn-black" href="PSYCHE.md" download="PSYCHE.md">Download .md</a>
   </div>
-  <p style="margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);line-height:1.6;">.yaml — for frameworks &amp; parsers · .md — paste into system prompts</p>
+  <p style="margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);line-height:1.6;">.yaml — blank template to fill out&nbsp;&nbsp;·&nbsp;&nbsp;.md — full spec with every field explained</p>
 </section>
 
-<!-- Footer -->
+<!-- Footer (black) -->
 <footer class="footer">
   <div class="footer-left">© 2026 PSM Labs — Personas, Safety & Intelligence</div>
   <div class="footer-links">
-    <a href="https://x.com/psmlabs" target="_blank">@psmlabs</a>
+    <a href="https://x.com/psmlabs" target="_blank" style="display:inline-flex;align-items:center;gap:6px;"><canvas id="pixel-x-footer" width="72" height="36" style="image-rendering:pixelated;width:72px;height:36px;pointer-events:none;"></canvas><span>@psmlabs</span></a>
     <a href="#">Spec v0.2.0</a>
   </div>
 </footer>
 
+<!-- Pixel Shoggoth Background Overlay -->
+<canvas id="shoggoth" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:3;opacity:0.12;image-rendering:pixelated;"></canvas>
+<style>
+  .nav, .hero, .logos-section, .cards-wrap, .statement, .illust-section, .layers-section, .demo-wrap, .compare-wrap, .cta, .footer, .ticker-wrap {
+    position: relative;
+    z-index: 2;
+  }
+</style>
 <script>
-// Particles
 (function() {
-  const c = document.getElementById('particles');
-  const ctx = c.getContext('2d');
-  let W, H;
-  function resize() { W = c.width = window.innerWidth; H = c.height = window.innerHeight; }
+  const canvas = document.getElementById('shoggoth');
+  const ctx = canvas.getContext('2d');
+  const PX = 10;
+  let W, H, COLS, ROWS;
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    COLS = Math.floor(W / PX);
+    ROWS = Math.floor(H / PX);
+  }
   resize();
   window.addEventListener('resize', resize);
+  function dist(x,y,ox,oy){return Math.sqrt((x-ox)**2+(y-oy)**2);}
 
-  const particles = [];
-  const colors = ['#7c3aed', '#00f0ff', '#ff2d8a', '#39ff14'];
-  for (let i = 0; i < 40; i++) {
-    particles.push({
-      x: Math.random() * 2000,
-      y: Math.random() * 5000,
-      r: 1 + Math.random() * 2,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: (Math.random() - 0.5) * 0.2,
-      alpha: 0.1 + Math.random() * 0.3,
-      pulse: Math.random() * Math.PI * 2,
-      pulseSpeed: 0.02 + Math.random() * 0.03
+  const eyes=[];
+  for(let i=0;i<9;i++) eyes.push({ox:(Math.random()-0.5)*0.6,oy:(Math.random()-0.5)*0.5,r:1.5+Math.random()*2,sp:0.3+Math.random()});
+  const smileys=[];
+  for(let i=0;i<6;i++) smileys.push({ox:(Math.random()-0.5)*0.9,oy:-0.3-Math.random()*0.3,sp1:0.5+Math.random(),sp2:0.4+Math.random(),phase:Math.random()*Math.PI*2});
+  const frags=[];
+  for(let i=0;i<35;i++) frags.push({x:Math.random(),y:Math.random(),w:2+Math.random()*8,h:1+Math.random()*3,sp:0.2+Math.random()*2,ph:Math.random()*Math.PI*2});
+
+  let frame=0;
+  let mouseX=0.5, mouseY=0.5;
+  document.addEventListener('mousemove', e=>{
+    mouseX=e.clientX/window.innerWidth;
+    mouseY=e.clientY/window.innerHeight;
+  });
+  // Find all dark sections once
+  const darkSels='.demo-wrap, .compare-wrap';
+  function getDark(){
+    const darkEls=document.querySelectorAll(darkSels);
+    const mid=window.innerHeight/2; // check what's at screen center
+    let maxDk=0;
+    darkEls.forEach(el=>{
+      const r=el.getBoundingClientRect();
+      // How much of this dark section overlaps the viewport center
+      const overlap=Math.max(0, Math.min(r.bottom, mid+200) - Math.max(r.top, mid-200));
+      const p=overlap/400; // 0-1
+      maxDk=Math.max(maxDk,p);
+    });
+    return Math.min(0.5, maxDk*0.5);
+  }
+
+  function getFriendly(){
+    const ctaEl=document.querySelector('.cta');
+    if(!ctaEl)return 0;
+    const r=ctaEl.getBoundingClientRect();
+    const mid=window.innerHeight/2;
+    // friendly when CTA is centered
+    const dist=Math.abs(r.top+r.height/2-mid);
+    const p=Math.max(0,1-dist/(window.innerHeight*0.8));
+    return p*p*(3-2*p);
+  }
+
+  // Mini guys — persistent positions
+  const miniGuys=[];
+  for(let i=0;i<8;i++){
+    miniGuys.push({
+      x:0.08+Math.random()*0.84,
+      y:0.15+Math.random()*0.7,
+      bob:Math.random()*Math.PI*2,
+      bobSpd:0.8+Math.random()*0.8,
+      size:3+Math.floor(Math.random()*2),
+      hasPencil:Math.random()>0.4,
+      wave:Math.random()>0.5,
+      color:['#f0d000','#ffd633','#ffe066','#f5c400'][Math.floor(Math.random()*4)]
     });
   }
 
-  function render() {
-    ctx.clearRect(0, 0, W, H);
-    const scrollY = window.scrollY;
-    for (const p of particles) {
-      p.x += p.vx;
-      p.y += p.vy;
-      p.pulse += p.pulseSpeed;
-      if (p.x < -10) p.x = W + 10;
-      if (p.x > W + 10) p.x = -10;
-      if (p.y < -10) p.y = H + scrollY + 10;
-      if (p.y > H + scrollY + 10) p.y = scrollY - 10;
-
-      const screenY = p.y - scrollY;
-      if (screenY < -20 || screenY > H + 20) continue;
-
-      const a = p.alpha * (0.5 + Math.sin(p.pulse) * 0.5);
-      ctx.beginPath();
-      ctx.arc(p.x, screenY, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = p.color;
-      ctx.globalAlpha = a;
-      ctx.fill();
-      // glow
-      ctx.beginPath();
-      ctx.arc(p.x, screenY, p.r * 4, 0, Math.PI * 2);
-      ctx.fillStyle = p.color;
-      ctx.globalAlpha = a * 0.15;
-      ctx.fill();
+  function drawMiniGuy(guy,t,alpha){
+    const gx=Math.floor(guy.x*COLS);
+    const gy=Math.floor(guy.y*ROWS+Math.sin(t*guy.bobSpd+guy.bob)*1.5);
+    const s=guy.size;
+    const a=alpha;
+    // Body (yellow square)
+    ctx.fillStyle=guy.color;
+    ctx.globalAlpha=a;
+    for(let dy=-s;dy<=s;dy++)for(let dx=-s;dx<=s;dx++){
+      ctx.fillRect((gx+dx)*PX,(gy+dy)*PX,PX,PX);
     }
-    ctx.globalAlpha = 1;
+    // Eyes
+    ctx.fillStyle='#000';
+    ctx.fillRect((gx-1)*PX,(gy-1)*PX,PX,PX);
+    ctx.fillRect((gx+1)*PX,(gy-1)*PX,PX,PX);
+    // Smile
+    ctx.fillRect((gx-1)*PX,(gy+1)*PX,PX,PX);
+    ctx.fillRect((gx)*PX,(gy+1)*PX,PX,PX);
+    ctx.fillRect((gx+1)*PX,(gy+1)*PX,PX,PX);
+    // Legs
+    ctx.fillStyle=guy.color;
+    ctx.fillRect((gx-1)*PX,(gy+s+1)*PX,PX,PX*2);
+    ctx.fillRect((gx+1)*PX,(gy+s+1)*PX,PX,PX*2);
+    // Arms
+    const armWave=guy.wave?Math.sin(t*2+guy.bob)*1.5:0;
+    ctx.fillRect((gx-s-1)*PX,(gy+Math.floor(armWave))*PX,PX,PX);
+    ctx.fillRect((gx+s+1)*PX,(gy-Math.floor(armWave))*PX,PX,PX);
+    // Pencil (if has one)
+    if(guy.hasPencil){
+      ctx.fillStyle='#f59e0b';
+      for(let i=0;i<4;i++) ctx.fillRect((gx+s+2+i)*PX,(gy-1-i)*PX,PX,PX);
+      ctx.fillStyle='#333';
+      ctx.fillRect((gx+s+6)*PX,(gy-5)*PX,PX,PX);
+    }
+    ctx.globalAlpha=1;
+  }
+
+  function render(){
+    ctx.clearRect(0,0,W,H);
+    const t=frame*0.03;
+    const cx=Math.floor(COLS/2), cy=Math.floor(ROWS/2);
+    const dk=getDark();
+    const friendly=getFriendly();
+    const scrollY=window.scrollY*0.02;
+    const shoggothAlpha=Math.max(0,1-friendly*1.5);
+    canvas.style.opacity=(0.12+dk*0.20)*shoggothAlpha+friendly*0.4;
+
+    if(shoggothAlpha>0.01)
+    for(let row=0;row<ROWS;row++){
+      const rowShift=dk>0.3?Math.floor(Math.sin(row*0.8+t*6)*dk*4*(Math.random()>0.93?1:0)):0;
+      for(let col=0;col<COLS;col++){
+        const sc=col+rowShift;
+        let color=null;
+        const dx=sc-cx, dy=row-cy;
+        const distort=dk*Math.sin(row*0.3+t*3)*3;
+        const bodyRx=COLS*0.22+Math.sin(dy*0.15+t)*3+distort;
+        const bodyRy=ROWS*0.25+Math.sin(dx*0.1+t*0.7)*2+dk*2;
+        const inBody=(dx*dx)/(bodyRx*bodyRx)+(dy*dy)/(bodyRy*bodyRy)<1;
+
+        let inTent=false;
+        const tl=10+dk*8;
+        for(let i=0;i<14;i++){
+          const a=(i/14)*Math.PI+0.1;
+          const bx=cx+Math.cos(a)*bodyRx*0.9, by=cy+bodyRy*0.7;
+          for(let s=0;s<tl;s++){
+            const w=1+dk*2;
+            const tx=bx+Math.sin(t*(0.5+i*0.1)+s*0.5)*(s*0.8*w);
+            const ty=by+s*1.5;
+            if(Math.abs(col-tx)<1.5&&Math.abs(row-ty)<1.2){inTent=true;break;}
+          }
+          if(inTent)break;
+        }
+
+        if(inBody||inTent){
+          let inEye=false,inPupil=false;
+          for(const e of eyes){
+            const ex=cx+e.ox*bodyRx*0.7;
+            const ey=cy+e.oy*bodyRy*0.6+Math.sin(t*e.sp)*(1+dk);
+            if(dist(sc,row,ex,ey)<e.r+dk*0.5){
+              inEye=true;
+              const mxCol=mouseX*COLS, myRow=mouseY*ROWS;
+              const ang=Math.atan2(myRow-ey,mxCol-ex);
+              const reach=(e.r+dk*0.5)*0.35;
+              const px=ex+Math.cos(ang)*reach;
+              const py=ey+Math.sin(ang)*reach;
+              if(dist(sc,row,px,py)<(e.r+dk*0.5)*0.4)inPupil=true;
+              break;
+            }
+          }
+          if(inEye){
+            if(inPupil){
+              const r=Math.floor(dk*220);
+              color=dk>0.1?`rgb(${r},0,0)`:'#000';
+            } else color='#fff';
+          } else {
+            if(Math.random()<0.01+dk*0.05){
+              color=dk>0.5?'#f00':'#fff';
+            } else {
+              const sh=80+Math.sin(col*0.2+row*0.15+t)*30;
+              if(dk>0.3){
+                // Dark mode: red-dominant glow
+                const intensity=120+dk*80+Math.sin(col*0.3+t)*30;
+                const r=Math.floor(intensity*(0.8+dk*0.2));
+                const g=Math.floor(intensity*(0.05+Math.random()*0.08));
+                const b=Math.floor(intensity*(0.1+dk*0.15));
+                color=`rgb(${Math.min(255,r)},${g},${Math.min(255,b)})`;
+              } else {
+                const r=Math.floor(sh*(0.3+dk*0.7));
+                const g=Math.floor(sh*(1-dk*0.85));
+                const b=Math.floor(sh*(0.4+dk*0.3));
+                color=`rgb(${r},${g},${b})`;
+              }
+            }
+          }
+        }
+
+        // Smileys fade and shatter
+        if(dk<0.9){
+          for(let si=0;si<smileys.length;si++){
+            const s=smileys[si];
+            const sx=cx+s.ox*bodyRx+Math.sin(t*s.sp1+s.phase)*(5+dk*12);
+            const sy=cy+s.oy*bodyRy+Math.cos(t*s.sp2+s.phase)*(3+dk*10);
+            if(dist(sc,row,sx,sy)<4){
+              if(dk>0.3&&Math.random()<dk*0.5)continue;
+              color=`rgb(${Math.floor(240*(1-dk)+100*dk)},${Math.floor(208*(1-dk)+60*dk)},${Math.floor(dk*40)})`;
+              if(dist(sc,row,sx-1,sy-0.8)<0.7||dist(sc,row,sx+1,sy-0.8)<0.7)color='#000';
+              if(row>sy+0.5&&row<sy+1.5&&Math.abs(sc-sx)<2&&dist(sc,row,sx,sy-1)>2.5)color='#000';
+            }
+          }
+        }
+
+        // Dark mode floating fragments
+        if(dk>0.2){
+          for(const f of frags){
+            const fx=f.x*COLS+Math.sin(t*f.sp+f.ph)*8;
+            const fy=f.y*ROWS+Math.cos(t*f.sp*0.7+f.ph)*5;
+            if(col>=fx&&col<fx+f.w&&row>=fy&&row<fy+f.h&&Math.random()<dk*0.4){
+              const v=Math.floor(Math.random()*50*dk);
+              color=`rgb(${v+Math.floor(dk*80)},${v},${v+Math.floor(dk*25)})`;
+            }
+          }
+        }
+
+        // Glitch bands
+        if(Math.sin(row*0.4+t*(4+dk*4))>(0.98-dk*0.15)&&color){
+          color=dk>0.5?(Math.random()>0.5?'#f00':'#fff'):'#fff';
+        }
+
+        // Dark static
+        if(dk>0.5&&!color&&Math.random()<dk*0.004){
+          const v=Math.floor(Math.random()*35);
+          color=`rgb(${v},${v},${v})`;
+        }
+
+        if(color){ctx.fillStyle=color;ctx.fillRect(col*PX,row*PX,PX,PX);}
+      }
+    }
+
+    // Scanlines
+    ctx.fillStyle=`rgba(0,0,0,${0.06+dk*0.06})`;
+    const sg=dk>0.5?2:3;
+    for(let y=0;y<H;y+=sg)ctx.fillRect(0,y,W,1);
+
+    // Red sweep line in dark mode
+    if(dk>0.3){
+      const sy=(t*50)%H;
+      ctx.fillStyle=`rgba(255,0,0,${dk*0.15})`;
+      ctx.fillRect(0,sy,W,2);
+    }
+
+    // Mini guys at CTA section
+    if(friendly>0.05){
+      for(const guy of miniGuys){
+        drawMiniGuy(guy,t,friendly*0.7);
+      }
+    }
+
+    frame++;
     requestAnimationFrame(render);
   }
   render();
 })();
-
+</script>
+<script>
 // Scroll reveal
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
-}, { threshold: 0.1 });
+}, { threshold: 0.15 });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Stagger layer cards
+document.querySelectorAll('.layer-card').forEach((card, i) => {
+  card.classList.add('reveal', 'reveal-delay-' + (i + 1));
+  observer.observe(card);
+});
+
+// Pixel X icon with smiley holding it
+(function() {
+  const cv = document.getElementById('pixel-x');
+  if (!cv) return;
+  const ctx = cv.getContext('2d');
+  const s = 3;
+  function px(x,y,c) { ctx.fillStyle = c; ctx.fillRect(x*s, y*s, s, s); }
+
+  function draw(hover) {
+    ctx.clearRect(0, 0, 72, 36);
+    const xc = hover ? '#7c3aed' : '#555';
+    const yel = '#f0d000';
+    const yelD = '#d4b800';
+    const blk = '#222';
+
+    // Smiley body (left side, 6x6 px block)
+    for (let dx = 0; dx < 6; dx++) for (let dy = 0; dy < 7; dy++) px(dx, dy + 2, yel);
+    // Highlight
+    px(1, 3, '#f5e040'); px(2, 3, '#f5e040');
+    // Eyes
+    px(1, 4, blk); px(4, 4, blk);
+    // Smile
+    px(1, 6, yelD); px(2, 6, blk); px(3, 6, blk); px(4, 6, yelD);
+    // Feet
+    px(1, 9, yel); px(2, 9, yel); px(4, 9, yel); px(5, 9, yel);
+    // Arm reaching right (holding the X)
+    px(6, 4, yel); px(7, 4, yel); px(6, 5, yel); px(7, 5, yel);
+
+    // X logo (right side, bigger, 8x8)
+    const xOff = 9;
+    const yOff = 1;
+    const xPixels = [
+      [0,0],[1,0],[1,1],[2,2],[3,3],[4,4],[5,5],[6,6],[7,6],[7,7],
+      [7,0],[6,0],[6,1],[5,2],[4,3],[3,4],[2,5],[1,6],[0,7],[0,6],
+      [2,1],[5,1],[3,2],[4,2],[3,5],[4,5],[2,6],[5,6]
+    ];
+    xPixels.forEach(([x,y]) => px(x + xOff, y + yOff, xc));
+
+    // Little hand overlap on X
+    px(8, 4, yel); px(9, 4, yel);
+  }
+
+  draw(false);
+  cv.parentElement.addEventListener('mouseenter', () => draw(true));
+  cv.parentElement.addEventListener('mouseleave', () => draw(false));
+
+  // Subtle idle animation - smiley bobs
+  let f = 0;
+  function animate() {
+    const bob = Math.round(Math.sin(f * 0.05) * 0.5);
+    cv.style.transform = `translateY(${bob}px)`;
+    f++;
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+// Footer pixel X icon
+(function() {
+  const cv = document.getElementById('pixel-x-footer');
+  if (!cv) return;
+  const ctx = cv.getContext('2d');
+  const s = 3;
+  function px(x,y,c) { ctx.fillStyle = c; ctx.fillRect(x*s, y*s, s, s); }
+
+  function draw(hover) {
+    ctx.clearRect(0, 0, 72, 36);
+    const xc = hover ? '#a78bfa' : '#888';
+    const yel = '#f0d000';
+    const yelD = '#d4b800';
+    const blk = '#222';
+
+    for (let dx = 0; dx < 6; dx++) for (let dy = 0; dy < 7; dy++) px(dx, dy + 2, yel);
+    px(1, 3, '#f5e040'); px(2, 3, '#f5e040');
+    px(1, 4, blk); px(4, 4, blk);
+    px(1, 6, yelD); px(2, 6, blk); px(3, 6, blk); px(4, 6, yelD);
+    px(1, 9, yel); px(2, 9, yel); px(4, 9, yel); px(5, 9, yel);
+    px(6, 4, yel); px(7, 4, yel); px(6, 5, yel); px(7, 5, yel);
+
+    const xOff = 9;
+    const yOff = 1;
+    const xPixels = [
+      [0,0],[1,0],[1,1],[2,2],[3,3],[4,4],[5,5],[6,6],[7,6],[7,7],
+      [7,0],[6,0],[6,1],[5,2],[4,3],[3,4],[2,5],[1,6],[0,7],[0,6],
+      [2,1],[5,1],[3,2],[4,2],[3,5],[4,5],[2,6],[5,6]
+    ];
+    xPixels.forEach(([x,y]) => px(x + xOff, y + yOff, xc));
+    px(8, 4, yel); px(9, 4, yel);
+  }
+
+  draw(false);
+  cv.parentElement.addEventListener('mouseenter', () => draw(true));
+  cv.parentElement.addEventListener('mouseleave', () => draw(false));
+
+  let f = 0;
+  function animate() {
+    const bob = Math.round(Math.sin(f * 0.05) * 0.5);
+    cv.style.transform = `translateY(${bob}px)`;
+    f++;
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
 
 // Smooth scroll
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', e => {
-    const target = document.querySelector(a.getAttribute('href'));
-    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+    const id = a.getAttribute('href');
+    if (id === '#') return;
+    e.preventDefault();
+    document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
   });
 });
 </script>
 
-<!-- GitHub link -->
-<a href="https://github.com/psmlabs/psychemd" target="_blank" rel="noopener" style="position:fixed;bottom:24px;right:24px;z-index:9999;width:44px;height:44px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;display:flex;align-items:center;justify-content:center;transition:all 0.3s ease;backdrop-filter:blur(8px);text-decoration:none;" onmouseover="this.style.background='rgba(255,255,255,0.12)';this.style.borderColor='rgba(255,255,255,0.25)';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.borderColor='rgba(255,255,255,0.1)';this.style.transform='translateY(0)'">
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-</a>
+<script>
+(function() {
+  const cv = document.getElementById('shog-sit');
+  if (!cv) return;
+  const ctx = cv.getContext('2d');
+  const s = 4;
+  const C = { body:'#3a5c3a', light:'#4a7a4a', eye:'#fff', pupil:'#000', smiley:'#f0d000', smEye:'#000', tent:'#2a4a2a' };
+  function px(x,y,c) { ctx.fillStyle=c; ctx.fillRect(x*s,y*s,s,s); }
+  
+  for(let x=3;x<=14;x++) px(x,4,C.body);
+  for(let x=2;x<=15;x++) { px(x,5,C.body); px(x,6,C.body); px(x,7,C.body); }
+  for(let x=1;x<=16;x++) { px(x,8,C.body); px(x,9,C.body); px(x,10,C.body); }
+  px(4,5,C.light); px(5,5,C.light); px(11,6,C.light); px(12,6,C.light);
+  px(4,6,C.eye); px(5,6,C.eye); px(4,7,C.eye); px(5,7,C.eye); px(5,7,C.pupil);
+  px(8,5,C.eye); px(9,5,C.eye); px(8,6,C.eye); px(9,6,C.eye); px(9,6,C.pupil);
+  px(12,6,C.eye); px(13,6,C.eye); px(12,7,C.eye); px(13,7,C.eye); px(12,7,C.pupil);
+  px(6,8,C.smiley); px(7,8,C.smiley); px(8,8,C.smiley); px(9,8,C.smiley);
+  px(6,9,C.smiley); px(7,9,C.smEye); px(8,9,C.smEye); px(9,9,C.smiley);
+  px(6,10,C.smiley); px(7,10,C.smiley); px(8,10,C.smiley); px(9,10,C.smiley);
+  px(3,11,C.tent); px(3,12,C.tent); px(7,11,C.tent); px(7,12,C.tent);
+  px(10,11,C.tent); px(10,12,C.tent); px(14,11,C.tent); px(14,12,C.tent);
+})();
+</script>
+
+<script>
+// Hanging shoggoth on personality card
+(function() {
+  const cv = document.getElementById('shog-hang');
+  if (!cv) return;
+  const ctx = cv.getContext('2d');
+  const s = 4;
+  const C = { body:'#3a5c3a', light:'#4a7a4a', eye:'#fff', pupil:'#000', smiley:'#f0d000', smEye:'#000', tent:'#2a4a2a', arm:'#3a5c3a' };
+  function px(x,y,c) { ctx.fillStyle=c; ctx.fillRect(x*s,y*s,s,s); }
+
+  // Arms reaching up (gripping the card edge)
+  px(5,0,C.arm); px(6,0,C.arm); px(10,0,C.arm); px(11,0,C.arm);
+  px(5,1,C.arm); px(6,1,C.arm); px(10,1,C.arm); px(11,1,C.arm);
+  px(5,2,C.arm); px(11,2,C.arm);
+
+  // Head/body blob
+  for(let x=4;x<=12;x++) px(x,3,C.body);
+  for(let x=3;x<=13;x++) { px(x,4,C.body); px(x,5,C.body); px(x,6,C.body); }
+  for(let x=4;x<=12;x++) { px(x,7,C.body); px(x,8,C.body); }
+  for(let x=5;x<=11;x++) px(x,9,C.body);
+
+  // Light patches
+  px(5,4,C.light); px(6,4,C.light); px(10,5,C.light);
+
+  // Eyes (3 eyes looking up)
+  px(5,4,C.eye); px(6,4,C.eye); px(5,5,C.eye); px(6,5,C.eye); px(5,4,C.pupil);
+  px(8,4,C.eye); px(9,4,C.eye); px(8,5,C.eye); px(9,5,C.eye); px(8,4,C.pupil);
+  px(11,4,C.eye); px(12,4,C.eye); px(11,5,C.eye); px(12,5,C.eye); px(11,4,C.pupil);
+
+  // Smiley mask
+  px(7,6,C.smiley); px(8,6,C.smiley); px(9,6,C.smiley); px(10,6,C.smiley);
+  px(7,7,C.smiley); px(8,7,C.smEye); px(9,7,C.smEye); px(10,7,C.smiley);
+  px(7,8,C.smiley); px(8,8,C.smiley); px(9,8,C.smiley); px(10,8,C.smiley);
+
+  // Dangling tentacles
+  px(5,10,C.tent); px(5,11,C.tent);
+  px(8,10,C.tent); px(8,11,C.tent); px(8,12,C.tent);
+  px(11,10,C.tent); px(11,11,C.tent);
+
+  // Gentle idle swing animation
+  let frame = 0;
+  function animate() {
+    const swing = Math.sin(frame * 0.03) * 2;
+    cv.style.transform = `translateX(calc(-50% + ${swing}px))`;
+    frame++;
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+</script>
+
+<script>
+// Peeking shoggoth on Relationships card (just eyes peeking from corner)
+(function() {
+  const cv = document.getElementById('shog-peek');
+  if (!cv) return;
+  const ctx = cv.getContext('2d');
+  const s = 4;
+  const C = { body:'#3a5c3a', light:'#4a7a4a', eye:'#fff', pupil:'#000' };
+  function px(x,y,c) { ctx.fillStyle=c; ctx.fillRect(x*s,y*s,s,s); }
+
+  // Partial body peeking from right edge
+  for(let x=0;x<=4;x++) { px(x,5,C.body); px(x,6,C.body); px(x,7,C.body); }
+  for(let x=0;x<=3;x++) { px(x,8,C.body); px(x,9,C.body); }
+  for(let x=0;x<=2;x++) px(x,10,C.body);
+  px(1,6,C.light); px(2,6,C.light);
+
+  // Two eyes peeking
+  px(1,7,C.eye); px(2,7,C.eye); px(1,8,C.eye); px(2,8,C.eye); px(2,7,C.pupil);
+  px(3,7,C.eye); px(4,7,C.eye); px(3,8,C.eye); px(4,8,C.eye); px(4,8,C.pupil);
+
+  // Subtle bob
+  let f=0;
+  function anim(){
+    const bob=Math.sin(f*0.025)*1.5;
+    cv.style.transform=`translateY(${bob}px)`;
+    f++;requestAnimationFrame(anim);
+  }
+  anim();
+})();
+</script>
+
+<script>
+// Sleeping shoggoth on Directives card
+(function() {
+  const cv = document.getElementById('shog-sleep');
+  if (!cv) return;
+  const ctx = cv.getContext('2d');
+  const s = 3;
+  const C = { body:'#3a5c3a', light:'#4a7a4a', eye:'#fff', pupil:'#000', smiley:'#f0d000', smEye:'#000', tent:'#2a4a2a' };
+  function px(x,y,c) { ctx.fillStyle=c; ctx.fillRect(x*s,y*s,s,s); }
+
+  // Flat sleeping body (wider, shorter)
+  for(let x=3;x<=17;x++) px(x,8,C.body);
+  for(let x=2;x<=18;x++) { px(x,9,C.body); px(x,10,C.body); }
+  for(let x=3;x<=17;x++) px(x,11,C.body);
+  for(let x=4;x<=16;x++) px(x,12,C.body);
+
+  // Light patches
+  px(5,9,C.light); px(6,9,C.light); px(13,9,C.light);
+
+  // Closed eyes (horizontal lines)
+  px(6,10,C.eye); px(7,10,C.eye); px(8,10,C.eye);
+  px(12,10,C.eye); px(13,10,C.eye); px(14,10,C.eye);
+
+  // Smiley mask (sideways/sleepy)
+  px(8,11,C.smiley); px(9,11,C.smiley); px(10,11,C.smiley); px(11,11,C.smiley);
+  px(9,12,C.smiley); px(10,12,C.smiley);
+
+  // Z's floating above
+  let f=0;
+  function anim(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // Redraw body
+    for(let x=3;x<=17;x++) px(x,8,C.body);
+    for(let x=2;x<=18;x++) { px(x,9,C.body); px(x,10,C.body); }
+    for(let x=3;x<=17;x++) px(x,11,C.body);
+    for(let x=4;x<=16;x++) px(x,12,C.body);
+    px(5,9,C.light); px(6,9,C.light); px(13,9,C.light);
+    px(6,10,C.eye); px(7,10,C.eye); px(8,10,C.eye);
+    px(12,10,C.eye); px(13,10,C.eye); px(14,10,C.eye);
+    px(8,11,C.smiley); px(9,11,C.smiley); px(10,11,C.smiley); px(11,11,C.smiley);
+    px(9,12,C.smiley); px(10,12,C.smiley);
+
+    // Floating Z's
+    const z1y = 5 + Math.sin(f*0.03)*2;
+    const z2y = 3 + Math.sin(f*0.03+1)*2;
+    ctx.fillStyle='rgba(255,255,255,0.4)';
+    ctx.font='bold 10px monospace';
+    ctx.fillText('z',16*s, z1y*s);
+    ctx.font='bold 7px monospace';
+    ctx.fillText('z',18*s, z2y*s);
+
+    f++;requestAnimationFrame(anim);
+  }
+  anim();
+})();
+</script>
 </body>
 </html>
